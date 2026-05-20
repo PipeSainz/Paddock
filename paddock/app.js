@@ -698,22 +698,30 @@ Devolvé SOLO JSON:
 Solo JSON válido, sin markdown.`;
 
   const raw = await callLLM(prompt, 300);
-  
   try {
-    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    let cleanRaw = raw.replace(/```json|```/g, '').trim();
+    const jsonMatch = cleanRaw.match(/\{[\s\S]*\}/);
+    
     if (!jsonMatch) {
-      throw new Error("No se encontró una estructura JSON válida en la respuesta.");
+      throw new Error("No se detectaron llaves JSON.");
     }
-    return JSON.parse(jsonMatch[0].trim());
+    
+    let jsonString = jsonMatch[0].trim();
+    jsonString = jsonString
+      .replace(/,\s*\]/g, ']')
+      .replace(/,\s*\}/g, '}');
+
+    return JSON.parse(jsonString);
+
   } catch (error) {
-    console.error("Error parseando la fragancia:", error, "Respuesta cruda:", raw);
+    console.error("Error parseando fragancia, aplicando fallback dinámico:", error, "Raw:", raw);
     return {
-      type: lang === 'en' ? 'Warm Spicy' : 'Especiada Cálida',
-      desc: name,
-      seasons: ['winter'],
-      moments: ['night'],
+      type: lang === 'en' ? 'Versatile Profile' : 'Perfil Versátil',
+      desc: name, 
+      seasons: ['all-year'],
+      moments: ['morning', 'afternoon', 'night'],
       tempMin: 0,
-      tempMax: 18
+      tempMax: 35
     };
   }
 }
