@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paddock — Wardrobe</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
+</head>
+<body>
+
+<!-- ══ ONBOARDING OVERLAY ══ -->
+<div class="ob-overlay" id="obOverlay" style="display:none">
+  <div class="ob-card" id="obCard">
+    <div class="ob-logo">PADDOCK</div>
+    <div class="ob-sub" id="obSub">Let's build your garage.</div>
+    <div class="ob-progress" id="obProgress"></div>
+    <div id="obBody"></div>
+    <div class="ob-nav" id="obNav"></div>
+  </div>
+</div>
+
+<!-- ══ HEADER ══ -->
+<header class="hdr">
+  <div class="logo">
+    <span class="logo-word">PADDOCK</span>
+    <span class="logo-badge">WARDROBE</span>
+  </div>
+  <div class="hdr-right">
+    <button class="pill-btn" onclick="toggleLang()">
+      <i class="ti ti-world" aria-hidden="true"></i>
+      <span id="langLabel">EN</span>
+    </button>
+    <button class="pill-btn" onclick="refreshWeather()">
+      <i class="ti ti-cloud" id="wIcon" aria-hidden="true"></i>
+      <span id="weatherText">...</span>
+    </button>
+  </div>
+</header>
+
+<!-- ══ TABS ══ -->
+<nav class="tabs">
+  <div class="tab active" id="tab-generate" onclick="switchTab('generate',this)">GENERATE</div>
+  <div class="tab" id="tab-wardrobe" onclick="switchTab('wardrobe',this)">WARDROBE</div>
+  <div class="tab" id="tab-add" onclick="switchTab('add',this)">ADD</div>
+  <div class="tab" id="tab-fragrances" onclick="switchTab('fragrances',this)">FRAGRANCES</div>
+  <div class="tab" id="tab-profile" onclick="switchTab('profile',this)">PROFILE</div>
+</nav>
+
+<!-- ══ MAIN LAYOUT ══ -->
+<div class="main">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sec-label" id="sb-occ-label">OCCASION</div>
+    <div class="occ-grid" id="occGrid"></div>
+    <div class="sec-label" id="sb-wardrobe-label">WARDROBE</div>
+    <div id="sidebarList"></div>
+  </aside>
+
+  <!-- CONTENT PANELS -->
+  <main class="content">
+
+    <!-- GENERATE -->
+    <div id="pGenerate">
+      <button class="gen-btn" id="genBtn" onclick="generateOutfit()">
+        <i class="ti ti-bolt" aria-hidden="true"></i>
+        <span id="genBtnTxt">GENERATE LOADOUT</span>
+      </button>
+      <div id="outfitArea">
+        <div class="empty">
+          <i class="ti ti-hanger" aria-hidden="true"></i>
+          <p id="emptyMsg">Press Generate to build today's outfit</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- WARDROBE -->
+    <div id="pWardrobe" style="display:none">
+      <div class="action-bar" id="wardrobeActions"></div>
+      <div id="fullWardrobeList"></div>
+    </div>
+
+    <!-- ADD ITEM -->
+    <div id="pAdd" style="display:none">
+      <div class="add-card">
+        <h2 id="addTitle">ADD NEW ITEM</h2>
+        <div class="form-grid">
+          <div class="ff ff-full">
+            <label id="lName">Item name</label>
+            <input id="fName" placeholder="e.g. Bulls Jersey, White Jeans, F1 Cap..." oninput="onNameInput()"/>
+          </div>
+          <div class="infer-box" id="inferBox">
+            <div class="infer-title" id="inferTitle">Auto-detected attributes</div>
+            <div class="infer-tags" id="inferTags"></div>
+            <div class="infer-row" id="inferStats"></div>
+          </div>
+          <div class="ff">
+            <label id="lCat">Category</label>
+            <select id="fCat">
+              <option value="inner top">Inner top</option>
+              <option value="outer top">Outer top</option>
+              <option value="bottom">Bottom</option>
+              <option value="shoes">Shoes</option>
+              <option value="hardware">Hardware</option>
+            </select>
+          </div>
+          <div class="ff">
+            <label id="lCol">Color</label>
+            <input id="fCol" placeholder="e.g. Black, Red..."/>
+          </div>
+          <div class="ff">
+            <label id="lBrand">Brand</label>
+            <input id="fBrand" placeholder="e.g. Adidas..."/>
+          </div>
+          <div class="ff">
+            <label id="lSub">Type (auto-filled)</label>
+            <input id="fSub" placeholder="e.g. Jersey, Jeans..."/>
+          </div>
+          <div class="ff ff-full">
+            <label id="lWarm">Warmth</label>
+            <div class="slider-row">
+              <span class="slider-lbl" id="lWarmL">Summer</span>
+              <input type="range" id="fWarm" min="1" max="5" value="2" step="1"/>
+              <span class="slider-lbl right" id="lWarmR">Winter</span>
+            </div>
+          </div>
+          <div class="ff ff-full">
+            <label id="lForm">Style level</label>
+            <div class="slider-row">
+              <span class="slider-lbl" id="lFormL">Relaxed</span>
+              <input type="range" id="fForm" min="1" max="5" value="2" step="1"/>
+              <span class="slider-lbl right" id="lFormR">Elegant</span>
+            </div>
+          </div>
+        </div>
+        <button class="add-submit" id="addSubmit" onclick="addGarment()">ADD TO GARAGE</button>
+      </div>
+    </div>
+
+    <!-- FRAGRANCES -->
+    <div id="pFragrances" style="display:none">
+      <div class="add-card">
+        <h2 id="fragTitle">YOUR BOTTLES</h2>
+        <p id="fragSub" style="font-size:12px;color:var(--ink3);margin-bottom:16px">Just type the name — we'll figure out the rest.</p>
+        <div class="add-row">
+          <input class="add-input" id="fragInput" placeholder="e.g. Dior Sauvage, Le Male, Oud Wood..." oninput="onFragInput()"/>
+          <button class="add-btn" id="fragAddBtn" onclick="addFrag()"><span id="fragAddTxt">ADD</span></button>
+        </div>
+        <div class="frag-infer-preview" id="fragInferPreview">
+          <div class="infer-header">
+            <span class="infer-label" id="fragInferLabel">Detecting fragrance...</span>
+          </div>
+          <div class="frag-infer-loading" id="fragInferLoading">
+            <div class="infer-dots"><span></span><span></span><span></span></div>
+            <span id="fragInferLoadingTxt">Identifying fragrance profile</span>
+          </div>
+          <div class="frag-infer-result" id="fragInferResult">
+            <div class="frag-infer-type" id="fragInferType"></div>
+            <div class="frag-infer-desc" id="fragInferDesc"></div>
+            <div class="infer-chips" id="fragInferChips"></div>
+            <div class="infer-confirm">
+              <button class="confirm-btn yes" onclick="confirmFrag()">
+                <i class="ti ti-check" aria-hidden="true"></i>
+                <span id="confirmYesTxt">Looks right — add it</span>
+              </button>
+              <button class="confirm-btn no" onclick="cancelFragInfer()">
+                <span id="confirmNoTxt">Cancel</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="fragList"></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="pProfile" style="display:none">
+      <div class="add-card">
+        <h2 id="profileTitle">STYLE PROFILE</h2>
+        <div id="profileWeights"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
