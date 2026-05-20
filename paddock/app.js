@@ -34,6 +34,23 @@ const VETOS = {
   'Running shoes':   ['Blazer','Chinos'],
   'Tank top':        ['Blazer'],
 };
+const OCC_REQUIRED_TAGS = {
+  gym:    { 'inner top': ['sporty','gym'],        bottom: ['sporty','gym'],        shoes: ['sporty','gym'],       'outer top': null, hardware: null },
+  street: { 'inner top': null,                    bottom: null,                    shoes: null,                   'outer top': null, hardware: null },
+  casual: { 'inner top': null,                    bottom: null,                    shoes: null,                   'outer top': null, hardware: null },
+  work:   { 'inner top': ['smart casual','formal','work'], bottom: ['smart casual','formal','work','versatile'], shoes: ['smart casual','formal'], 'outer top': null, hardware: null },
+  formal: { 'inner top': ['formal','work'],        bottom: ['formal','work'],        shoes: ['formal'],            'outer top': null, hardware: null },
+  date:   { 'inner top': null,                    bottom: null,                    shoes: null,                   'outer top': null, hardware: null },
+};
+const OCC_BANNED_TAGS = {
+  gym:    { 'inner top': ['formal','work','smart casual'], bottom: ['formal','work','smart casual'], shoes: ['formal'], 'outer top': ['formal'], hardware: null },
+  street: { 'inner top': ['formal','work'],                bottom: ['formal','work'],                shoes: ['formal'], 'outer top': ['formal'], hardware: null },
+  casual: { 'inner top': ['formal','work'],                bottom: ['formal','work'],                shoes: ['formal'], 'outer top': ['formal'], hardware: null },
+  work:   { 'inner top': ['sporty','gym'],                 bottom: ['sporty','gym'],                 shoes: ['gym'],    'outer top': null,        hardware: null },
+  formal: { 'inner top': ['sporty','gym','casual'],        bottom: ['sporty','gym','casual'],         shoes: ['gym','sporty'], 'outer top': null,  hardware: null },
+  date:   { 'inner top': ['gym'],                          bottom: ['gym'],                           shoes: ['gym'],    'outer top': null,        hardware: null },
+};
+
 const COMPS = {
   Navy:   ['Brown','Beige','White','Grey'],
   Black:  ['Grey','Teal','White','Red','Silver'],
