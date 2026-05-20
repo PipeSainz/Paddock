@@ -696,8 +696,26 @@ Devolvé SOLO JSON:
 - tempMin: integer — temperatura mínima en Celsius
 - tempMax: integer — temperatura máxima en Celsius
 Solo JSON válido, sin markdown.`;
+
   const raw = await callLLM(prompt, 300);
-  return JSON.parse(raw.replace(/```json|```/g, '').trim());
+  
+  try {
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error("No se encontró una estructura JSON válida en la respuesta.");
+    }
+    return JSON.parse(jsonMatch[0].trim());
+  } catch (error) {
+    console.error("Error parseando la fragancia:", error, "Respuesta cruda:", raw);
+    return {
+      type: lang === 'en' ? 'Warm Spicy' : 'Especiada Cálida',
+      desc: name,
+      seasons: ['winter'],
+      moments: ['night'],
+      tempMin: 0,
+      tempMax: 18
+    };
+  }
 }
 
 function onFragInput() {
